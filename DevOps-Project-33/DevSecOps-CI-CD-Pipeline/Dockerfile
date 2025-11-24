@@ -21,7 +21,8 @@ FROM maven:3.9.3-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy pom.xml and source code
-COPY DevOps-Project-33/DevSecOps-CI-CD-Pipeline /app
+COPY . /app
+
 
 # Skip license plugin and tests during build
 RUN mvn clean install -DskipTests -Dlicense.skip=true
