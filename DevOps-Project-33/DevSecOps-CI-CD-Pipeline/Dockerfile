@@ -45,4 +45,4 @@ RUN apk add --no-cache bash curl
 
 # Command to run WAR using Tomcat
 # You can replace with your preferred servlet container
-CMD ["sh", "-c", "echo 'Deploy WAR manually or run in your preferred container'"]
+CMD ["sh", "-c", "echo 'Deploy WAR manually or run in your preferred container'"] 
