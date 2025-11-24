@@ -15,7 +15,16 @@
 #
 
 FROM eclipse-temurin:21-jdk
+
 COPY . /usr/src/myapp
 WORKDIR /usr/src/myapp
+
+# Ensure Maven wrapper is executable
+RUN chmod +x mvnw
+
+# Build the project
 RUN ./mvnw clean package
+
+# Run the app
 CMD ./mvnw cargo:run -P tomcat90
+
