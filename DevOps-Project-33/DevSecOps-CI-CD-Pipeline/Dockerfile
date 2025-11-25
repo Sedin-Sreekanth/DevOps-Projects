@@ -15,34 +15,27 @@
 #
 # Use official Maven + JDK image
 # Use Maven + JDK 17 image for build
+
+# Stage 1: Build the WAR file
 FROM maven:3.9.3-eclipse-temurin-17 AS build
 
-# Set working directory
 WORKDIR /app
-
-# Copy pom.xml and source code
 COPY . /app
 
-
-# Skip license plugin and tests during build
 RUN mvn clean install -DskipTests -Dlicense.skip=true
 
-# -------------------------------
-# Stage 2: Build lightweight runtime image
-# -------------------------------
-FROM eclipse-temurin:17-jre-alpine
 
-WORKDIR /app
+# Stage 2: Runtime using Tomcat
+FROM tomcat:9.0-jdk17-temurin
 
-# Copy WAR from build stage
-COPY --from=build /app/target/jpetstore.war /app/jpetstore.war
+# Remove default apps
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Expose default Tomcat port
+# Copy WAR to Tomcat webapps directory
+COPY --from=build /app/target/jpetstore.war /usr/local/tomcat/webapps/jpetstore.war
+
+# Expose Tomcat port
 EXPOSE 8080
 
-# Run WAR using embedded Tomcat (simplest way)
-RUN apk add --no-cache bash curl
-
-# Command to run WAR using Tomcat
-# You can replace with your preferred servlet container
-CMD ["sh", "-c", "echo 'Deploy WAR manually or run in your preferred container'"] 
+# Start Tomcat
+CMD ["catalina.sh", "run"]
