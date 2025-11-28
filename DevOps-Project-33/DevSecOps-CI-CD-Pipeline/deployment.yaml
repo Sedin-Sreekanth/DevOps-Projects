@@ -26,10 +26,11 @@ kind: Service
 metadata:
   name: petshop
 spec:
-  type: LoadBalancer
+  type: NodePort       # Changed from LoadBalancer
   selector:
     app: petshop
   ports:
   - protocol: TCP
     port: 80
     targetPort: 8080
+    nodePort: 30080    # Accessible via <node-ip>:30080
